@@ -1,0 +1,1241 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+string encrypt(string s, int key)
+{
+    string e = s;
+    for (int i = 0; i < e.length(); i++)
+    {
+        if (e[i] >= 'a' && e[i] <= 'z')
+        {
+            int x = e[i];
+            x = x - 97;
+            x = (x + key) % 26; // safe modulo
+            if (x < 0)
+                x += 26;
+            x = x + 97;
+            e[i] = x;
+        }
+        else if (e[i] >= 'A' && e[i] <= 'Z')
+        {
+            int x = e[i];
+            x = x - 65;
+            x = (x + key) % 26; // safe modulo
+            if (x < 0)
+                x += 26;
+            x = x + 65;
+            e[i] = x;
+        }
+        else if (e[i] >= '0' && e[i] <= '9')
+        {
+            int x = e[i];
+            x = x - 48;
+            x = (x + key) % 10; // safe modulo
+            if (x < 0)
+                x += 10;
+            x = x + 48;
+            e[i] = x;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    return e;
+}
+
+string chng_encrypt(string s, int key)
+{
+    string e = s;
+    for (int i = 0; i < e.length(); i++)
+    {
+        if (e[i] >= 'a' && e[i] <= 'z')
+        {
+            int x = e[i];
+            x = x - 97;
+            x = (x + key) % 26; // safe modulo
+            if (x < 0)
+                x += 26;
+            x = x + 65;
+            e[i] = x;
+        }
+        else if (e[i] >= 'A' && e[i] <= 'Z')
+        {
+            int x = e[i];
+            x = x - 65;
+            x = (x + key) % 26; // safe modulo
+            if (x < 0)
+                x += 26;
+            x = x + 97;
+            e[i] = x;
+        }
+        else if (e[i] >= '0' && e[i] <= '9')
+        {
+            int x = e[i];
+            x = x - 48;
+            x = (x + key) % 10; // safe modulo
+            if (x < 0)
+                x += 10;
+            x = x + 48;
+            e[i] = x;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    return e;
+}
+
+string decrypt(string s, int key)
+{
+    string e = s;
+    for (int i = 0; i < e.length(); i++)
+    {
+        if (e[i] >= 'a' && e[i] <= 'z')
+        {
+            int x = e[i];
+            x = x - 97;
+            x = (x - key) % 26;
+            if (x < 0)
+                x += 26;
+            x = x + 97;
+            e[i] = x;
+        }
+        else if (e[i] >= 'A' && e[i] <= 'Z')
+        {
+            int x = e[i];
+            x = x - 65;
+            x = (x - key) % 26;
+            if (x < 0)
+                x += 26;
+            x = x + 65;
+            e[i] = x;
+        }
+        else if (e[i] >= '0' && e[i] <= '9')
+        {
+            int x = e[i];
+            x = x - 48;
+            x = (x - key) % 10;
+            if (x < 0)
+                x += 10;
+            x = x + 48;
+            e[i] = x;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    return e;
+}
+
+int main()
+{
+    int key;
+    cin >> key;
+    string input = "Sumaiya Khan 1234";
+    cout << "original text: " << input << endl;
+    string cip = encrypt(input, key);
+    cout << "Cipher text: " << cip << endl;
+    // string chng_cip = chng_encrypt(input, key);
+    // cout << "Changed Cipher text: " << chng_cip << endl;
+    string org = decrypt(cip, key);
+    cout << "Decrypt text: " << org << endl;
+    if (org == input)
+    {
+        cout << "Strings Matched" << endl;
+    }
+    else
+    {
+        cout << "Wrong Decryption" << endl;
+    }
+    return 0;
+}
+
+
+
+//trans
+// Caeser Cipher + Transposition Cipher
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    string msg;
+    // cout << "Enter message (UPPERCASE only): ";
+    cin >> msg;
+
+    string key;
+    // cout << "Enter numeric key (e.g. 4231): ";
+    cin >> key;
+
+    int cols = key.size();
+    int rows = ceil((msg.size() * 1.0) / cols);
+
+    // Step 1: Fill matrix row-wise
+    vector<vector<char>> arr(rows, vector<char>(cols, '*'));
+
+    int k = 0;
+    for (int i = 0; i < rows; i++)
+    {
+
+        for (int j = 0; j < cols; j++)
+        {
+
+            if (k < msg.size())
+                arr[i][j] = msg[k];
+            else
+                arr[i][j] = '*';
+            k++;
+        }
+    }
+
+    cout << "\nMatrix (row-wise filled):\n";
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    string cipher = "";
+    for (int c = 0; c < cols; c++)
+    {
+        int colIndex = (key[c] - '0') - 1;
+        for (int r = 0; r < rows; r++)
+        {
+            cipher += arr[r][colIndex];
+        }
+    }
+    cout << "\nCipher Text: " << cipher << endl;
+
+    vector<vector<char>> arr2(rows, vector<char>(cols, '*'));
+    int idx = 0;
+    for (int c = 0; c < cols; c++)
+    {
+        int colIndex = (key[c] - '0') - 1;
+        for (int r = 0; r < rows; r++)
+        {
+            arr2[r][colIndex] = cipher[idx++];
+        }
+    }
+    cout << "\nMatrix after filling cipher (for decryption):\n";
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            cout << arr2[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    string plain = "";
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            if (arr2[i][j] != '*')
+                plain += arr2[i][j];
+        }
+    }
+    cout << "\nDecrypted Plain Text: " << plain << endl;
+
+    return 0;
+}
+
+/*
+
+ABCDEFGHIJKLMNO
+4231
+
+ABCDEFGHIJKLMNO
+1234
+
+*/
+
+
+
+
+//elproduct
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+// Safe modular function (handles negatives)
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+
+// Fast modular exponentiation (base^exp mod n)
+ll powMod(ll base, ll exp, ll n)
+{
+    ll res = 1;
+    base = mod(base, n); // Using the mod function to ensure base is positive
+
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            res = mod(res * base, n); // Using mod for the result
+
+        exp >>= 1;
+        base = mod(base * base, n); // Using mod for base
+    }
+    return res;
+}
+
+// Modular inverse using brute force (only for small numbers)
+ll modInverse(ll a, ll p)
+{
+    a = mod(a, p); // Ensure a is positive
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+
+int main()
+{
+    // --- Example with smaller primes ---
+    ll p = 15588119; // large prime
+    ll g = 2;        // generator
+
+    ll a = 123;
+    ll r1 = 456;
+    ll r2 = 789;
+    ll beta = powMod(g, a, p); // beta = g^a mod p
+    cout << "Beta: " << beta << endl;
+
+    // Calculate C11 = g^r1 mod p
+    ll c11 = powMod(g, r1, p);
+    cout << "C11: " << c11 << endl;
+
+    // Calculate C12 = g^r2 mod p
+    ll c12 = powMod(g, r2, p);
+    cout << "C12: " << c12 << endl;
+
+    // Messages
+    ll m1 = 3140564;
+    ll c21 = mod(m1 * powMod(beta, r1, p), p); // C21 = m1 * beta^r1 mod p
+    cout << "C21: " << c21 << endl;
+
+    ll m2 = 1034675;
+    ll c22 = mod(m2 * powMod(beta, r2, p), p); // C22 = m2 * beta^r2 mod p
+    cout << "C22: " << c22 << endl;
+
+    // Inverse of C11
+    // ll res1 = 1;
+    // for (ll i = 0; i < a; i++)
+    // {
+    //     res1 = mod(res1 * c11, p); // res1 = C11^a mod p
+    // }
+
+    // ll c11inv = modInverse(res1, p); // Inverse of C11
+    // cout << "C11 Inv: " << c11inv << endl;
+
+    // Inverse of C12
+    // ll res2 = 1;
+    // for (ll i = 0; i < a; i++)
+    // {
+    //     res2 = mod(res2 * c12, p); // res2 = C12^a mod p
+    // }
+
+    // ll c12inv = modInverse(res2, p); // Inverse of C12
+    // cout << "C12 Inv: " << c12inv << endl;
+
+    // C1 = g^(r1 + r2) mod p
+    ll c1 = powMod(g, r1 + r2, p);
+    cout << "C1: " << c1 << endl;
+
+    // C2 = m1 * m2 * beta^(r1 + r2) mod p
+    ll c2 = mod(m1 * m2 * powMod(beta, r1 + r2, p), p);
+    cout << "C2: " << c2 << endl;
+
+    // Inverse of C1
+    ll res3 = 1;
+    for (ll i = 0; i < a; i++)
+    {
+        res3 = mod(res3 * c1, p); // res3 = C1^a mod p
+    }
+
+    ll c1inv = modInverse(res3, p); // Inverse of C1
+    cout << "C1 Inv: " << c1inv << endl;
+
+    // Decrypt the messages
+    // ll dec1 = mod(c21 * c11inv, p); // Decrypt message 1
+    // cout << "Decrypted Msg1: " << dec1 << endl;
+
+    // ll dec2 = mod(c22 * c12inv, p); // Decrypt message 2
+    // cout << "Decrypted Msg2: " << dec2 << endl;
+
+    // Decrypt the product
+    ll dec = mod(c2 * c1inv, p);
+    cout << "Decrypted: " << dec << endl;
+    ll m3 = m1 * m2;
+    cout << "Original Msg: " << mod(m3, p) << endl;
+    // Check if the product cipher decryption is valid
+    // if (mod(dec, p) == mod(dec1 * dec2, p))
+    // {
+    //     cout << "Product Cipher Decryption Valid" << endl;
+    // }
+    // else
+    // {
+    //     cout << "Product Cipher Decryption Invalid" << endl;
+    // }
+
+    // return 0;
+}
+
+
+
+//elg sig
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+// Modular inverse using brute force (only for small numbers)
+ll modinv(ll a, ll p)
+{
+    a = a % p;
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return 0;
+}
+// Safe modular function (handles negatives)
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+
+// Fast modular exponentiation
+ll power(ll a, ll p, ll modn)
+{
+    ll res = 1;
+    ll base = a % modn;
+
+    while (p > 0)
+    {
+        if (p % 2 == 1)
+            res = (res * base) % modn;
+        p /= 2;
+        base = (base * base) % modn;
+    }
+    return res;
+}
+
+// Check if g is a generator (primitive root modulo p)
+bool is_generator(ll g, ll p)
+{
+    set<ll> powers; // To store all distinct powers of g mod p
+    for (ll i = 1; i < p; i++)
+    {
+        powers.insert(power(g, i, p)); // Compute g^i mod p
+    }
+    return powers.size() == p - 1; // If we get all numbers from 1 to p-1
+}
+
+// Function to find the smallest generator
+ll find_generator(ll p)
+{
+    for (ll g = 2; g < p; g++) // Start with g = 2
+    {
+        if (is_generator(g, p))
+        {
+            return g; // Found a generator
+        }
+    }
+    return -1; // If no generator found (which should not happen for prime p)
+}
+
+int main()
+{
+    // --- Example with smaller primes ---
+    ll p = 61; // A small prime number for debugging purposes
+
+    // Generate g (generator for p)
+    ll g = find_generator(p);
+    if (g == -1)
+    {
+        cout << "No generator found for p" << endl;
+        return 0;
+    }
+
+    cout << "Generated g = " << g << "\n";
+
+    // Private key
+    ll a = 5;              // Example private key
+    ll y = power(g, a, p); // public key
+
+    cout << "Public parameters:\n";
+    cout << "p = " << p << ", g = " << g << ", y = " << y << "\n";
+    cout << "Private key a = " << a << "\n";
+
+    // Message
+    ll m = 1345;
+
+    // Choose k (coprime with p-1)
+    ll k = 123;                  // choose small number for example
+    while (__gcd(k, p - 1) != 1) // Use C++ standard library's gcd function
+        k++;
+
+    // --- Signature generation ---
+    ll r = power(g, k, p);
+    ll k_inv = modinv(k, p - 1);
+
+    ll temp = mod(m - a * r, p - 1);
+    ll s = mod(temp * k_inv, p - 1);
+
+    cout << "\nMessage m = " << m << "\n";
+    cout << "Random k = " << k << " (coprime with p-1)\n";
+    cout << "Signature (r, s) = (" << r << ", " << s << ")\n";
+
+    // --- Verification ---
+    ll v1 = power(g, m, p);
+    ll v2 = (power(y, r, p) * power(r, s, p)) % p;
+
+    cout << "\nVerification:\n";
+    cout << "v1 = g^m mod p = " << v1 << "\n";
+    cout << "v2 = y^r * r^s mod p = " << v2 << "\n";
+
+    if (v1 == v2)
+        cout << "Signature is VALID\n";
+    else
+        cout << "Signature is INVALID\n";
+
+    return 0;
+}
+
+
+//known
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+// Safe modular function (handles negatives)
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+
+// Function to calculate the GCD of two numbers
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+
+// Fast modular exponentiation (a^exp mod n)
+ll powMod(ll base, ll exp, ll n)
+{
+    ll res = 1;
+    base = mod(base, n); // Using the mod function to ensure base is positive
+
+    while (exp > 0)
+    {
+        if (exp & 1)
+            res = mod(res * base, n); // Using mod for the result
+
+        exp >>= 1;
+        base = mod(base * base, n); // Using mod for base
+    }
+    return res;
+}
+
+// Modular inverse using brute force (only for small numbers)
+ll modInv(ll a, ll p)
+{
+    a = mod(a, p);
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+
+int main()
+{
+    ll p = 19, q = 23; // Choose small primes for simplicity
+    ll n = p * q;
+
+    ll phi = (p - 1) * (q - 1); // Euler's totient function
+
+    // Start with a large value for e (typically 65537)
+    ll e = 65537;
+    while (e < phi)
+    {
+        if (gcd(e, phi) == 1)
+            break;
+        e++;
+    }
+    cout << "Public key (e): " << e << endl;
+
+    // Calculate the private key d
+    ll d = modInv(e, phi);
+    cout << "Private key (d): " << d << endl;
+
+    // Find multiple private keys (d values) using the formula e * d ≡ 1 mod φ(n)
+    ll cnt = 0;
+    ll dd[5];
+    for (ll i = 0; i < phi; i++)
+    {
+        if ((1 + i * phi) % e == 0)
+        {
+            dd[cnt] = (1 + i * phi) / e;
+            cnt++;
+            if (cnt > 4)
+                break;
+        }
+    }
+    for (auto it : dd)
+        cout << it << " ";
+    cout << endl;
+
+    // Encrypt a message
+    ll ms = 12;
+    ll c1 = powMod(ms, e, n);
+    cout << "Ciphertext: " << c1 << endl;
+
+    // Decrypt the ciphertext
+    ll dec = powMod(c1, d, n);
+    cout << "Decrypted using d: " << dec << endl;
+
+    // Try brute-forcing to find d (decryption exponent)
+    for (ll i = 2; i < n; i++)
+    {
+        if (ms == powMod(c1, i, n))
+        {
+            cout << "Decrypted: " << ms << endl;
+            cout << "Iteration is: " << i << endl;
+            break;
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+//randomization
+//#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+// modular exponentiation
+ll modExp(ll base, ll exp, ll p)
+{
+    ll res = 1;
+    base %= p;
+    while (exp > 0)
+    {
+        if (exp & 1)
+            res = (res * base) % p;
+        base = (base * base) % p;
+        exp = exp / 2;
+    }
+    return res;
+}
+
+// modular inverse using Fermat’s theorem
+ll modInv(ll a, ll p)
+{
+    a = mod(a, p); // Ensure a is positive
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+
+// === Rerandomization function ===
+// Given ciphertext (c1, c2), returns a rerandomized version (c1', c2')
+pair<ll, ll> rerandomize(ll c1, ll c2, ll g, ll h, ll p, ll r)
+{
+    ll c1_new = (c1 * modExp(g, r, p)) % p;
+    ll c2_new = (c2 * modExp(h, r, p)) % p;
+    return {c1_new, c2_new};
+}
+
+int main()
+{
+    ll p = 61; // a small prime for demonstration
+    ll g = 2;
+    ll a = 127;
+    ll h = modExp(g, a, p);
+
+    ll ms1 = 123;
+    ll ms2 = 67;
+    ll k1 = 53;
+    ll k2 = 77;
+
+    cout << "Parameters: p=" << p << " g=" << g << " a(private)=" << a << " h(public)=" << h << "\n\n";
+    cout << "Messages: ms1=" << ms1 << ", ms2=" << ms2 << "\n\n";
+
+    // Encrypt two messages
+    ll c11 = modExp(g, k1, p);
+    ll c21 = (ms1 * modExp(h, k1, p)) % p;
+    ll c12 = modExp(g, k2, p);
+    ll c22 = (ms2 * modExp(h, k2, p)) % p;
+
+    // Product ciphertext (homomorphic property)
+    ll c1 = (c11 * c12) % p;
+    ll c2 = (c21 * c22) % p;
+    cout << "Product ciphertext: (c1, c2) = (" << c1 << ", " << c2 << ")\n\n";
+
+    // Decrypt product
+    ll s = modExp(c1, a, p);
+    ll s_inv = modInv(s, p);
+    ll dec = (c2 * s_inv) % p;
+
+    ll expected = (ms1 * ms2) % p;
+    cout << "Decrypted product message: " << dec << endl;
+    cout << "Expected (ms1 * ms2 mod p): " << expected << endl;
+    cout << ((dec == expected) ? "Product decryption successful!\n" : "Mismatch!\n");
+
+    // === Demonstrate re-randomization ===
+    ll r = 111; // new random number
+    // obtain rerandomized ciphertext
+    auto pr = rerandomize(c1, c2, g, h, p, r);
+    ll c1_new = pr.first;
+    ll c2_new = pr.second;
+
+    cout << "\nRerandomized ciphertext: \n";
+    cout << "c1' = " << c1_new << "\n";
+    cout << "c2' = " << c2_new << "\n";
+
+    // Decrypt rerandomized ciphertext
+    ll s2 = modExp(c1_new, a, p);
+    ll s2_inv = modInv(s2, p);
+    ll dec2 = (c2_new * s2_inv) % p;
+
+    cout << "Decrypted rerandomized message: " << dec2 << "\n";
+    cout << ((dec2 == expected) ? "Rerandomization successful (message unchanged).\n"
+                                : "Something went wrong in rerandomization!\n");
+
+    return 0;
+}
+
+
+
+//rsa product
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+// Safe modular function (handles negatives)
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+
+// Function to calculate the GCD of two numbers
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+
+// Function to calculate the modular inverse (using brute force)
+ll modInverse(ll a, ll p)
+{
+    a = mod(a, p); // Ensure a is positive
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+
+// Fast modular exponentiation (base^exp mod n)
+ll powMod(ll base, ll exp, ll n)
+{
+    ll res = 1;
+    base = mod(base, n); // Using the mod function to ensure base is positive
+
+    while (exp > 0)
+    {
+        if (exp & 1)
+            res = mod(res * base, n); // Using mod for the result
+
+        exp >>= 1;
+        base = mod(base * base, n); // Using mod for base
+    }
+    return res;
+}
+
+int main()
+{
+    ll p, q;
+    cout << "Enter prime p: ";
+    cin >> p;
+    cout << "Enter prime q: ";
+    cin >> q;
+
+    ll n = p * q;               // Calculate n = p * q
+    ll phi = (p - 1) * (q - 1); // Euler's Totient function
+
+    ll e = 65537; // Start with a commonly used public exponent
+    while (e < phi)
+    {
+        if (gcd(e, phi) == 1)
+            break;
+        e++;
+    }
+
+    cout << "Public key (e): " << e << endl;
+    cout << "Phi(n): " << phi << endl;
+
+    ll d = modInverse(e, phi); // Calculate private key d
+    cout << "Private key (d): " << d << endl;
+
+    // Input two messages
+    ll m1, m2;
+    cout << "Enter message 1: ";
+    cin >> m1;
+    cout << "Enter message 2: ";
+    cin >> m2;
+
+    cout << "Product of plaintexts: " << mod(m1 * m2, n) << endl;
+
+    // Encrypt the messages
+    ll c1 = powMod(m1, e, n); // Encrypt message 1
+    ll c2 = powMod(m2, e, n); // Encrypt message 2
+    cout << "Cipher 1: " << c1 << endl;
+    cout << "Cipher 2: " << c2 << endl;
+
+    // Homomorphic encryption (multiplying ciphertexts)
+    ll c = mod(c1 * c2, n);
+    cout << "C1 * C2 (mod n): " << c << endl;
+
+    // Decrypt the product of the ciphertexts
+    ll decrypted = powMod(c, d, n);
+    cout << "Decrypted (m1 * m2 mod n): " << decrypted << endl;
+
+    // Check if the homomorphic property holds
+    if (decrypted == mod(m1 * m2, n))
+        cout << "Valid (Homomorphic property holds)" << endl;
+    else
+        cout << "Invalid" << endl;
+
+    return 0;
+}
+
+
+
+
+//rsa sig
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+// Function to calculate the GCD of two numbers
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+    {
+        return a;
+    }
+    else
+    {
+        return gcd(b, a % b);
+    }
+}
+ll modInv(ll a, ll p)
+{
+    a = a % p;
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+// Function to calculate power modulo n (m^e mod n)
+ll power(ll a, ll p, ll mod)
+{
+    ll res = 1;
+    a = a % mod;
+    for (ll i = 0; i < p; i++)
+    {
+        res = (res * a) % mod;
+    }
+    return res;
+}
+
+int main()
+{
+    // Small primes for demonstration purposes
+    ll p, q;
+    cin >> p >> q;
+
+    // Calculate n and phi(n)
+    ll n = p * q;
+    ll phi = (p - 1) * (q - 1);
+
+    // Choose e such that gcd(e, phi) = 1
+    ll new_e = 1000000;
+    ll e = 65537; // start with a bit larger value
+    while (e < phi)
+    {
+        if (gcd(e, phi) == 1)
+            break;
+        e++;
+    }
+    cout << "Public key (e): " << e << endl;
+
+    // Find private key d (modular inverse of e mod phi)
+    ll d = modInv(e, phi);
+    cout << "Private key (d): " << d << endl;
+
+    // Message to be signed
+    ll m = 20;
+    cout << "Message (m): " << m << endl;
+
+    // RSA Digital Signature: se = m^d mod n
+    ll se = power(m, d, n);
+    cout << "Signature (se = m^d mod n): " << se << "\n";
+
+    // Verification: M = se^e mod n; valid if M == m
+    ll M = power(se, e, n);
+    cout << "Verified message (M = se^e mod n): " << M << "\n";
+
+    if (M == m)
+    {
+        cout << "Signature VALID \n";
+    }
+    else
+    {
+        cout << "Signature INVALID \n";
+    }
+
+    return 0;
+}
+
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+string vernamEncrypt(string text, string key)
+{
+    string result = "";
+    if (key.length() != text.length())
+    {
+        cout << "Error: Key must be the same length as text!" << endl;
+        return "";
+    }
+
+    for (size_t i = 0; i < text.length(); i++)
+    {
+        if (isupper(text[i]) && isupper(key[i]))
+        {
+            // A=0 ... Z=25, add and wrap around using modulo 26
+            char enc = ((text[i] - 'A') ^ (key[i] - 'A')) + 'A';
+            result += enc;
+        }
+        else if (islower(text[i]) && islower(key[i]))
+        {
+            char enc = ((text[i] - 'a') ^ (key[i] - 'a')) + 'a';
+            result += enc;
+        }
+        else
+        {
+            // If characters aren't letters, just keep them same
+            result += text[i];
+        }
+    }
+
+    return result;
+}
+
+string vernamDecrypt(string cipher, string key)
+{
+    string result = "";
+    if (key.length() != cipher.length())
+    {
+        cout << "Error: Key must be the same length as text!" << endl;
+        return "";
+    }
+
+    for (size_t i = 0; i < cipher.length(); i++)
+    {
+        if (isupper(cipher[i]) && isupper(key[i]))
+        {
+            char dec = ((cipher[i] - 'A') ^ (key[i] - 'A')) + 'A';
+            result += dec;
+        }
+        else if (islower(cipher[i]) && islower(key[i]))
+        {
+            char dec = ((cipher[i] - 'a') ^ (key[i] - 'a')) + 'a';
+            result += dec;
+        }
+        else
+        {
+            result += cipher[i];
+        }
+    }
+
+    return result;
+}
+
+int main()
+{
+    string text, key;
+
+    cout << "Enter text (A,Z only): ";
+    getline(cin, text);
+    cout << "Enter key  (same length): ";
+    getline(cin, key);
+
+    string encrypted = vernamEncrypt(text, key);
+    cout << "\nEncrypted Text: " << encrypted << endl;
+
+    string decrypted = vernamDecrypt(encrypted, key);
+    cout << "Decrypted Text: " << decrypted << endl;
+
+    return 0;
+}
+
+// #include <bits/stdc++.h>
+// using namespace std;
+
+// // Function to encrypt/decrypt using Vernam Cipher (XOR encryption)
+// string vernam_cipher(string text, string key)
+// {
+//     string result = "";
+
+//     // Ensure the key is as long as the text, otherwise pad it
+//     if (text.length() != key.length())
+//     {
+//         cout << "Error: Key must be the same length as the text." << endl;
+//         return "";
+//     }
+
+//     // XOR each character of the text with the key
+//     for (int i = 0; i < text.length(); i++)
+//     {
+//         // XOR each character and convert back to a character
+//         result += text[i] ^ key[i];
+//     }
+
+//     return result;
+// }
+
+// int main()
+// {
+//     string text, key;
+
+//     // Input message (plaintext or ciphertext) and key
+//     cout << "Enter the text (plaintext or ciphertext): ";
+//     getline(cin, text);
+//     cout << "Enter the key (same length as text): ";
+//     getline(cin, key);
+
+//     // Make sure key is as long as the text
+//     if (key.length() != text.length())
+//     {
+//         cout << "Error: The key length must be the same as the text length." << endl;
+//         return 0;
+//     }
+
+//     // Encrypt or Decrypt the text using the Vernam cipher
+//     string result = vernam_cipher(text, key);
+
+//     // Output the result
+//     cout << "Result (Encrypted/Decrypted): " << result << endl;
+
+//     return 0;
+// }
+
+
+
+
+
+
+//randcorrect
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+// Safe modular function (handles negatives)
+ll mod(const ll &a, const ll &m)
+{
+    ll res = a % m;
+    if (res < 0)
+        res += m;
+    return res;
+}
+
+// Fast modular exponentiation (base^exp mod n)
+ll powMod(ll base, ll exp, ll n)
+{
+    ll res = 1;
+    base = mod(base, n); // Using the mod function to ensure base is positive
+
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            res = mod(res * base, n); // Using mod for the result
+
+        exp >>= 1;
+        base = mod(base * base, n); // Using mod for base
+    }
+    return res;
+}
+
+// Modular inverse using brute force (only for small numbers)
+ll modInverse(ll a, ll p)
+{
+    a = mod(a, p); // Ensure a is positive
+    for (ll i = 1; i < p; i++)
+    {
+        if ((a * i) % p == 1)
+            return i;
+    }
+    return -1; // no inverse exists
+}
+bool is_generator(ll g, ll p)
+{
+    set<ll> powers; // To store all distinct powers of g mod p
+    for (ll i = 1; i < p; i++)
+    {
+        powers.insert(powMod(g, i, p)); // Compute g^i mod p
+    }
+    return powers.size() == p - 1; // If we get all numbers from 1 to p-1
+}
+
+// Function to find the smallest generator
+ll find_generator(ll p)
+{
+    for (ll g = 2; g < p; g++) // Start with g = 2
+    {
+        if (is_generator(g, p))
+        {
+            return g; // Found a generator
+        }
+    }
+    return -1; // If no generator found (which should not happen for prime p)
+}
+pair<ll, ll> rerandomize(ll c1, ll c2, ll g, ll h, ll p, ll r)
+{
+    ll c1_new = (c1 * powMod(g, r, p)) % p;
+    ll c2_new = (c2 * powMod(h, r, p)) % p;
+    return {c1_new, c2_new};
+}
+int main()
+{
+    // --- Example with smaller primes ---
+    ll p = 61; // large prime
+    ll g = find_generator(p);
+    if (g == -1)
+    {
+        cout << "No generator found for p" << endl;
+        return 0;
+    }
+
+    cout << "Generated g = " << g << "\n";
+    ll a = 123;
+    ll r1 = 456;
+    ll r2 = 789;
+    ll beta = powMod(g, a, p); // beta = g^a mod p
+    cout << "Beta: " << beta << endl;
+
+    // Calculate C11 = g^r1 mod p
+    ll c11 = powMod(g, r1, p);
+    cout << "C11: " << c11 << endl;
+
+    // Calculate C12 = g^r2 mod p
+    ll c12 = powMod(g, r2, p);
+    cout << "C12: " << c12 << endl;
+
+    // Messages
+    ll m1 = 3140564;
+    ll c21 = mod(m1 * powMod(beta, r1, p), p); // C21 = m1 * beta^r1 mod p
+    cout << "C21: " << c21 << endl;
+
+    ll m2 = 1034675;
+    ll c22 = mod(m2 * powMod(beta, r2, p), p); // C22 = m2 * beta^r2 mod p
+    cout << "C22: " << c22 << endl;
+
+    // C1 = g^(r1 + r2) mod p
+    ll c1 = powMod(g, r1 + r2, p);
+    cout << "C1: " << c1 << endl;
+
+    // C2 = m1 * m2 * beta^(r1 + r2) mod p
+    ll c2 = mod(m1 * m2 * powMod(beta, r1 + r2, p), p);
+    cout << "C2: " << c2 << endl;
+
+    // Inverse of C1
+    ll res3 = 1;
+    for (ll i = 0; i < a; i++)
+    {
+        res3 = mod(res3 * c1, p);
+    }
+
+    ll c1inv = modInverse(res3, p); // Inverse of C1
+    cout << "C1 Inv: " << c1inv << endl;
+
+    ll dec = mod(c2 * c1inv, p);
+    cout << "Decrypted: " << dec << endl;
+    ll m3 = m1 * m2;
+    cout << "Original Msg: " << mod(m3, p) << endl;
+    ll r = 111; // new random number
+    // obtain rerandomized ciphertext
+    auto pr = rerandomize(c1, c2, g, beta, p, r);
+    ll c1_new = pr.first;
+    ll c2_new = pr.second;
+
+    cout << "\nRerandomized ciphertext: \n";
+    cout << "c1' = " << c1_new << "\n";
+    cout << "c2' = " << c2_new << "\n";
+
+    // Decrypt rerandomized ciphertext
+    ll s2 = powMod(c1_new, a, p);
+    ll s2_inv = modInverse(s2, p);
+    ll dec2 = (c2_new * s2_inv) % p;
+
+    cout << "Decrypted rerandomized message: " << dec2 << "\n";
+    cout << ((dec2 == mod(m3, p)) ? "Rerandomization successful (message unchanged).\n"
+                                  : "Something went wrong in rerandomization!\n");
+
+    return 0;
+}
+
+
